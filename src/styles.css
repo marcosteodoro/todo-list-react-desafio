@@ -92,3 +92,7 @@ li>input[type="text"] {
     text-decoration: line-through;
     color: #888;
 }
+
+button:disabled {
+    cursor: not-allowed;
+}
