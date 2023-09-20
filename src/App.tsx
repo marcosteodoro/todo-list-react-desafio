@@ -3,7 +3,8 @@ import ITarefa from "./interfaces/ITarefa"
 import ListaTarefas from "./components/ListaTarefas"
 
 function App() {
-  let textoNovaTarefa = '';
+  const [textoNovaTarefa, setTextoNovaTarefa] = useState('');
+  // const [desabilitarBotao, setDesabilitarBotao] = useState(true)
   const [tarefas, setTarefas] = useState<ITarefa[]>(() => {
     const tarefasSalvas = localStorage.getItem("tarefas");
     return tarefasSalvas?.length ? JSON.parse(tarefasSalvas) : []
@@ -13,29 +14,27 @@ function App() {
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
   }, [tarefas])
 
-  let tarefasIncompletas: ITarefa[] = [];
-  let tarefasCompletas: ITarefa[] = [];
+  const tarefasIncompletas: ITarefa[] = tarefas.filter(tarefa => !tarefa.completa);
+  const tarefasCompletas: ITarefa[] = tarefas.filter(tarefa => tarefa.completa);
 
-  tarefas.forEach(tarefa => {
-    if (!tarefa.completa) {
-      tarefasIncompletas.push(tarefa);
-    }
-  });
-
-  tarefas.forEach(tarefa => {
-    if (tarefa.completa) {
-      tarefasCompletas.push(tarefa);
-    }
-  });
+  const validaTarefa = () => {
+    if (textoNovaTarefa.length < 1 || textoNovaTarefa.trim().length < 1){
+     alert('Tarefa em branco')
+    //  setDesabilitarBotao(true)
+     return false
+    } 
+    // setDesabilitarBotao(false)
+    return true
+  }
 
   const handleNovaTarefa = (textoNovaTarefa: string) => {
+    validaTarefa() && 
     setTarefas(tarefas.concat({
       id: Date.now(),
       tarefa: textoNovaTarefa,
       completa: false
     }));
-
-    textoNovaTarefa = '';
+    setTextoNovaTarefa('');
   }
 
   const handleTarefaCompleta = (tarefaAtualizar: ITarefa) => {
@@ -64,7 +63,7 @@ function App() {
                 id="nova-tarefa"
                 type="text"
                 value={textoNovaTarefa}
-                onChange={e => textoNovaTarefa = e.target.value}
+                onChange={e => setTextoNovaTarefa(e.target.value)}
             />
             <button
                 id="botao-adicionar"
