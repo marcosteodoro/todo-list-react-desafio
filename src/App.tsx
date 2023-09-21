@@ -3,7 +3,7 @@ import ITarefa from "./interfaces/ITarefa"
 import ListaTarefas from "./components/ListaTarefas"
 
 function App() {
-  let textoNovaTarefa = '';
+  const [textoNovaTarefa, setTextoNovaTarefa] = useState("");
   const [tarefas, setTarefas] = useState<ITarefa[]>(() => {
     const tarefasSalvas = localStorage.getItem("tarefas");
     return tarefasSalvas?.length ? JSON.parse(tarefasSalvas) : []
@@ -11,6 +11,9 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
+
+    const quantidadeTarefasIncompletas = tarefas.filter(tarefa => !tarefa.completa).length;
+    document.title = `${quantidadeTarefasIncompletas} tarefas incompletas!`
   }, [tarefas])
 
   let tarefasIncompletas: ITarefa[] = [];
@@ -46,9 +49,6 @@ function App() {
     ))
 
     setTarefas(tarefasAtualizadas);
-
-    const quantidadeTarefasIncompletas = tarefas.filter(tarefa => !tarefa.completa).length;
-    document.title = `${quantidadeTarefasIncompletas} tarefas incompletas!`
   }
 
   const handleApagarTarefa = (tarefaApagar: ITarefa) => {
@@ -64,7 +64,7 @@ function App() {
                 id="nova-tarefa"
                 type="text"
                 value={textoNovaTarefa}
-                onChange={e => textoNovaTarefa = e.target.value}
+                onChange={e => setTextoNovaTarefa(e.target.value)}
             />
             <button
                 id="botao-adicionar"
