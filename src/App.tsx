@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react"
+import 'bootstrap/dist/css/bootstrap.css'
 import ITarefa from "./interfaces/ITarefa"
 import ListaTarefas from "./components/ListaTarefas"
 
@@ -20,12 +21,12 @@ function App() {
   const validaTarefa = () => {
     if (textoNovaTarefa.length < 1 || textoNovaTarefa.trim().length < 1){
      alert('Tarefa em branco')
-    //  setDesabilitarBotao(true)
      return false
     } 
-    // setDesabilitarBotao(false)
     return true
   }
+
+  const disableButton = textoNovaTarefa.length < 1 || textoNovaTarefa.trim().length < 1;
 
   const handleNovaTarefa = (textoNovaTarefa: string) => {
     validaTarefa() && 
@@ -44,9 +45,10 @@ function App() {
         : tarefa
     ))
 
+    
     setTarefas(tarefasAtualizadas);
 
-    const quantidadeTarefasIncompletas = tarefas.filter(tarefa => !tarefa.completa).length;
+    const quantidadeTarefasIncompletas = tarefasAtualizadas.filter(tarefa => !tarefa.completa).length;
     document.title = `${quantidadeTarefasIncompletas} tarefas incompletas!`
   }
 
@@ -58,7 +60,7 @@ function App() {
   return (
     <div className="conteudo">
       <p>
-            <label htmlFor="nova-tarefa">Adicionar Tarefa</label>
+            <label htmlFor="nova-tarefa" className="d-flex flex-row space-between">Adicionar Tarefa</label>
             <input
                 id="nova-tarefa"
                 type="text"
@@ -67,7 +69,9 @@ function App() {
             />
             <button
                 id="botao-adicionar"
+                className="btn btn-outline-primary"
                 onClick={() => handleNovaTarefa(textoNovaTarefa)}
+                disabled={disableButton}
             >Adicionar</button>
         </p>
         <ListaTarefas
