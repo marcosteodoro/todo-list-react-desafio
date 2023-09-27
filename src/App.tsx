@@ -13,6 +13,19 @@ function App() {
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
   }, [tarefas]);
 
+  useEffect(() => {
+    const atualizarTitulo = () => {
+      const quantidadeTarefasIncompletas = tarefas.filter(
+        (tarefa) => !tarefa.completa
+      ).length;
+      document.title = `${quantidadeTarefasIncompletas} tarefas incompletas!`;
+    };
+
+    atualizarTitulo();
+
+    return atualizarTitulo;
+  }, [tarefas]);
+
   const handleNovaTarefa = (texto: string) => {
     if (texto.trim() === "") {
       window.alert("⚠️ Insira uma tarefa válida");
