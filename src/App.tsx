@@ -16,20 +16,8 @@ function App() {
     document.title = `${quantidadeTarefasIncompletas} tarefas incompletas!`
   }, [tarefas])
 
-  let tarefasIncompletas: ITarefa[] = [];
-  let tarefasCompletas: ITarefa[] = [];
-
-  tarefas.forEach(tarefa => {
-    if (!tarefa.completa) {
-      tarefasIncompletas.push(tarefa);
-    }
-  });
-
-  tarefas.forEach(tarefa => {
-    if (tarefa.completa) {
-      tarefasCompletas.push(tarefa);
-    }
-  });
+  const tarefasIncompletas: ITarefa[] = tarefas.filter(tarefa => !tarefa.completa);
+  const tarefasCompletas: ITarefa[] = tarefas.filter(tarefa => tarefa.completa);
 
   const handleNovaTarefa = (textoNovaTarefa: string) => {
     setTarefas(tarefas.concat({
