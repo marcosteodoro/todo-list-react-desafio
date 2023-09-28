@@ -1,5 +1,5 @@
-export default interface ITarefa {
-  id: number,
-  tarefa: string,
-  completa: boolean
+export interface ITarefa {
+  id: number;
+  tarefa: string;
+  completa: boolean;
 }
