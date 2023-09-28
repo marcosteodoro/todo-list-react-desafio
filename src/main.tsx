@@ -2,9 +2,9 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import "./styles.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+
 import { Inicial } from "./routes/Inicial.tsx";
-import { Completas } from "./routes/Completas.tsx";
-import { Incompletas } from "./routes/Incompletas.tsx";
+import { Tarefas } from "./routes/Tarefas.tsx";
 
 const router = createBrowserRouter([
   {
@@ -13,11 +13,11 @@ const router = createBrowserRouter([
   },
   {
     path: "completas",
-    element: <Completas />,
+    element: <Tarefas completas />,
   },
   {
     path: "incompletas",
-    element: <Incompletas />,
+    element: <Tarefas completas={false} />,
   },
 ]);
 

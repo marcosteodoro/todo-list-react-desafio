@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+
 import { ITarefa } from "../interfaces/ITarefa";
 
 interface ListaTarefasProps {
@@ -34,7 +35,9 @@ export function ListaTarefas(props: ListaTarefasProps) {
               onChange={() => handleTarefaCompleta(tarefa)}
             />
 
-            <label>{tarefa.tarefa}</label>
+            <label>
+              {tarefa.completa ? <del>{tarefa.tarefa}</del> : tarefa.tarefa}
+            </label>
 
             <button
               className="apagar"

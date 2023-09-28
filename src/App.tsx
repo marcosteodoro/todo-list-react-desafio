@@ -1,33 +1,28 @@
 import { useEffect, useState } from "react";
-import { ITarefa } from "./interfaces/ITarefa";
+
 import { ListaTarefas } from "./components/ListaTarefas";
+import { ITarefa } from "./interfaces/ITarefa";
 
 export function App() {
-  const [textoNovaTarefa, setTextoNovaTarefa] = useState("");
-
   const [tarefas, setTarefas] = useState<ITarefa[]>(() => {
     const tarefasSalvas = localStorage.getItem("tarefas");
-    return tarefasSalvas?.length ? JSON.parse(tarefasSalvas) : [];
+    return tarefasSalvas?.length
+      ? (JSON.parse(tarefasSalvas) as ITarefa[])
+      : [];
   });
+
+  const tarefasIncompletas = tarefas.filter((tarefa) => !tarefa.completa);
+  const tarefasCompletas = tarefas.filter((tarefa) => tarefa.completa);
+
+  const [textoNovaTarefa, setTextoNovaTarefa] = useState("");
 
   useEffect(() => {
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
   }, [tarefas]);
 
-  let tarefasIncompletas: ITarefa[] = [];
-  let tarefasCompletas: ITarefa[] = [];
-
-  tarefas.forEach((tarefa) => {
-    if (!tarefa.completa) {
-      tarefasIncompletas.push(tarefa);
-    }
-  });
-
-  tarefas.forEach((tarefa) => {
-    if (tarefa.completa) {
-      tarefasCompletas.push(tarefa);
-    }
-  });
+  useEffect(() => {
+    document.title = `${tarefasIncompletas.length} tarefas incompletas!`;
+  }, [tarefasIncompletas.length]);
 
   const handleNovaTarefa = (textoNovaTarefa: string) => {
     if (textoNovaTarefa.length === 0) {
@@ -35,37 +30,32 @@ export function App() {
       return;
     }
 
-    setTarefas(
-      tarefas.concat({
+    setTarefas((oldTarefas) => [
+      ...oldTarefas,
+      {
         id: Date.now(),
         tarefa: textoNovaTarefa,
         completa: false,
-      })
-    );
+      },
+    ]);
 
     setTextoNovaTarefa("");
   };
 
   const handleTarefaCompleta = (tarefaAtualizar: ITarefa) => {
-    const tarefasAtualizadas = tarefas.map((tarefa) =>
-      tarefa.id === tarefaAtualizar.id
-        ? { ...tarefa, completa: !tarefa.completa }
-        : tarefa
+    setTarefas((oldTarefas) =>
+      oldTarefas.map((tarefa) =>
+        tarefa.id === tarefaAtualizar.id
+          ? { ...tarefa, completa: !tarefa.completa }
+          : tarefa
+      )
     );
-
-    setTarefas(tarefasAtualizadas);
-
-    const quantidadeTarefasIncompletas = tarefas.filter(
-      (tarefa) => !tarefa.completa
-    ).length;
-    document.title = `${quantidadeTarefasIncompletas} tarefas incompletas!`;
   };
 
   const handleApagarTarefa = (tarefaApagar: ITarefa) => {
-    const tarefasAtualizadas = tarefas.filter(
-      (tarefa) => tarefa.id !== tarefaApagar.id
+    setTarefas((tarefasAtuais) =>
+      tarefasAtuais.filter((tarefa) => tarefa.id !== tarefaApagar.id)
     );
-    setTarefas(tarefasAtualizadas);
   };
 
   return (
