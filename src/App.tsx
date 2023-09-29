@@ -3,7 +3,7 @@ import ITarefa from "./interfaces/ITarefa"
 import ListaTarefas from "./components/ListaTarefas"
 
 function App() {
-  let textoNovaTarefa = '';
+  const [textoNovaTarefa, setTextoNovaTarefa] = useState('');
   const [tarefas, setTarefas] = useState<ITarefa[]>(() => {
     const tarefasSalvas = localStorage.getItem("tarefas");
     return tarefasSalvas?.length ? JSON.parse(tarefasSalvas) : []
@@ -11,31 +11,26 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
+    document.title = `${tarefas.filter(tarefa => !tarefa.completa).length} tarefas incompletas!`;
   }, [tarefas])
 
-  let tarefasIncompletas: ITarefa[] = [];
-  let tarefasCompletas: ITarefa[] = [];
-
-  tarefas.forEach(tarefa => {
-    if (!tarefa.completa) {
-      tarefasIncompletas.push(tarefa);
-    }
-  });
-
-  tarefas.forEach(tarefa => {
-    if (tarefa.completa) {
-      tarefasCompletas.push(tarefa);
-    }
-  });
+  const tarefasIncompletas: ITarefa[] = tarefas.filter(tarefa => !tarefa.completa);
+  const tarefasCompletas: ITarefa[] = tarefas.filter(tarefa => tarefa.completa);
 
   const handleNovaTarefa = (textoNovaTarefa: string) => {
+    if (!textoNovaTarefa.trim()) {
+      window.alert("O texto da nova tarefa não pode ser vazio!")
+      setTextoNovaTarefa('');
+      return;
+    }
+
     setTarefas(tarefas.concat({
       id: Date.now(),
       tarefa: textoNovaTarefa,
       completa: false
     }));
 
-    textoNovaTarefa = '';
+    setTextoNovaTarefa('');
   }
 
   const handleTarefaCompleta = (tarefaAtualizar: ITarefa) => {
@@ -46,9 +41,6 @@ function App() {
     ))
 
     setTarefas(tarefasAtualizadas);
-
-    const quantidadeTarefasIncompletas = tarefas.filter(tarefa => !tarefa.completa).length;
-    document.title = `${quantidadeTarefasIncompletas} tarefas incompletas!`
   }
 
   const handleApagarTarefa = (tarefaApagar: ITarefa) => {
@@ -59,34 +51,36 @@ function App() {
   return (
     <div className="conteudo">
       <p>
-            <label htmlFor="nova-tarefa">Adicionar Tarefa</label>
-            <input
-                id="nova-tarefa"
-                type="text"
-                value={textoNovaTarefa}
-                onChange={e => textoNovaTarefa = e.target.value}
-            />
-            <button
-                id="botao-adicionar"
-                onClick={() => handleNovaTarefa(textoNovaTarefa)}
-            >Adicionar</button>
-        </p>
-        <ListaTarefas
-          titulo="Tarefas"
-          divId="incompletas"
-          tarefas={tarefasIncompletas}
-          handleTarefaCompleta={handleTarefaCompleta}
-          handleApagarTarefa={handleApagarTarefa}
-          linkTitulo="incompletas"
+        <label htmlFor="nova-tarefa">Adicionar Tarefa</label>
+        <input
+          id="nova-tarefa"
+          type="text"
+          value={textoNovaTarefa}
+          onChange={e => setTextoNovaTarefa(e.target.value)}
+          onKeyUp={e => {if (e.key === "Enter") handleNovaTarefa(textoNovaTarefa)}}
         />
-        <ListaTarefas
-          titulo="Completas"
-          divId="completas"
-          tarefas={tarefasCompletas}
-          handleTarefaCompleta={handleTarefaCompleta}
-          handleApagarTarefa={handleApagarTarefa}
-          linkTitulo="completas"
-        />
+        <button
+          id="botao-adicionar"
+          onClick={() => handleNovaTarefa(textoNovaTarefa)}
+          disabled={!textoNovaTarefa.trim()}
+        >Adicionar</button>
+      </p>
+      <ListaTarefas
+        titulo="Tarefas incompletas"
+        divId="incompletas"
+        tarefas={tarefasIncompletas}
+        handleTarefaCompleta={handleTarefaCompleta}
+        handleApagarTarefa={handleApagarTarefa}
+        linkTitulo="incompletas"
+      />
+      <ListaTarefas
+        titulo="Tarefas completas"
+        divId="completas"
+        tarefas={tarefasCompletas}
+        handleTarefaCompleta={handleTarefaCompleta}
+        handleApagarTarefa={handleApagarTarefa}
+        linkTitulo="completas"
+      />
     </div>
   )
 }

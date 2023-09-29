@@ -21,7 +21,9 @@ export default function ListaTarefas(props: ListaTarefasProps) {
 
     return (
         <>
-            <h3><Link to={props.linkTitulo}>{props.titulo}</Link></h3>
+            {props.divId === "completas"
+            ? <del><h3><Link to={props.linkTitulo}>{props.titulo}</Link></h3></del>
+            : <h3><Link to={props.linkTitulo}>{props.titulo}</Link></h3>}
             <ul id={props.divId}>
                 {props.tarefas.map(tarefa => (
                     <li key={tarefa.id}>
