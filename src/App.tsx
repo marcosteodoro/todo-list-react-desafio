@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react"
+import 'bootstrap/dist/css/bootstrap.css'
 import ITarefa from "./interfaces/ITarefa"
 import ListaTarefas from "./components/ListaTarefas"
 
 function App() {
-  let textoNovaTarefa = '';
+  const [textoNovaTarefa, setTextoNovaTarefa] = useState('');
+  // const [desabilitarBotao, setDesabilitarBotao] = useState(true)
   const [tarefas, setTarefas] = useState<ITarefa[]>(() => {
     const tarefasSalvas = localStorage.getItem("tarefas");
     return tarefasSalvas?.length ? JSON.parse(tarefasSalvas) : []
@@ -13,29 +15,27 @@ function App() {
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
   }, [tarefas])
 
-  let tarefasIncompletas: ITarefa[] = [];
-  let tarefasCompletas: ITarefa[] = [];
+  const tarefasIncompletas: ITarefa[] = tarefas.filter(tarefa => !tarefa.completa);
+  const tarefasCompletas: ITarefa[] = tarefas.filter(tarefa => tarefa.completa);
 
-  tarefas.forEach(tarefa => {
-    if (!tarefa.completa) {
-      tarefasIncompletas.push(tarefa);
-    }
-  });
+  const validaTarefa = () => {
+    if (textoNovaTarefa.length < 1 || textoNovaTarefa.trim().length < 1){
+     alert('Tarefa em branco')
+     return false
+    } 
+    return true
+  }
 
-  tarefas.forEach(tarefa => {
-    if (tarefa.completa) {
-      tarefasCompletas.push(tarefa);
-    }
-  });
+  const disableButton = textoNovaTarefa.length < 1 || textoNovaTarefa.trim().length < 1;
 
   const handleNovaTarefa = (textoNovaTarefa: string) => {
+    validaTarefa() && 
     setTarefas(tarefas.concat({
       id: Date.now(),
       tarefa: textoNovaTarefa,
       completa: false
     }));
-
-    textoNovaTarefa = '';
+    setTextoNovaTarefa('');
   }
 
   const handleTarefaCompleta = (tarefaAtualizar: ITarefa) => {
@@ -45,9 +45,10 @@ function App() {
         : tarefa
     ))
 
+    
     setTarefas(tarefasAtualizadas);
 
-    const quantidadeTarefasIncompletas = tarefas.filter(tarefa => !tarefa.completa).length;
+    const quantidadeTarefasIncompletas = tarefasAtualizadas.filter(tarefa => !tarefa.completa).length;
     document.title = `${quantidadeTarefasIncompletas} tarefas incompletas!`
   }
 
@@ -59,16 +60,18 @@ function App() {
   return (
     <div className="conteudo">
       <p>
-            <label htmlFor="nova-tarefa">Adicionar Tarefa</label>
+            <label htmlFor="nova-tarefa" className="d-flex flex-row space-between">Adicionar Tarefa</label>
             <input
                 id="nova-tarefa"
                 type="text"
                 value={textoNovaTarefa}
-                onChange={e => textoNovaTarefa = e.target.value}
+                onChange={e => setTextoNovaTarefa(e.target.value)}
             />
             <button
                 id="botao-adicionar"
+                className="btn btn-outline-primary"
                 onClick={() => handleNovaTarefa(textoNovaTarefa)}
+                disabled={disableButton}
             >Adicionar</button>
         </p>
         <ListaTarefas
