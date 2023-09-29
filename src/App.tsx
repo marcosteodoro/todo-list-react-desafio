@@ -3,90 +3,100 @@ import ITarefa from "./interfaces/ITarefa"
 import ListaTarefas from "./components/ListaTarefas"
 
 function App() {
-  let textoNovaTarefa = '';
+  const [textoNovaTarefa, setTextoNovaTarefa] = useState("");
   const [tarefas, setTarefas] = useState<ITarefa[]>(() => {
     const tarefasSalvas = localStorage.getItem("tarefas");
-    return tarefasSalvas?.length ? JSON.parse(tarefasSalvas) : []
+    return tarefasSalvas ? JSON.parse(tarefasSalvas) : [];
   });
 
   useEffect(() => {
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
-  }, [tarefas])
+  }, [tarefas]);
 
-  let tarefasIncompletas: ITarefa[] = [];
-  let tarefasCompletas: ITarefa[] = [];
+  useEffect(() => {
+    const atualizarTitulo = () => {
+      const quantidadeTarefasIncompletas = tarefas.filter(
+        (tarefa) => !tarefa.completa
+      ).length;
+      document.title = `${quantidadeTarefasIncompletas} tarefas incompletas!`;
+    };
 
-  tarefas.forEach(tarefa => {
-    if (!tarefa.completa) {
-      tarefasIncompletas.push(tarefa);
+    atualizarTitulo();
+
+    return atualizarTitulo;
+  }, [tarefas]);
+
+  const handleNovaTarefa = (texto: string) => {
+    if (texto.trim() === "") {
+      window.alert("⚠️ Insira uma tarefa válida");
+      return;
     }
-  });
 
-  tarefas.forEach(tarefa => {
-    if (tarefa.completa) {
-      tarefasCompletas.push(tarefa);
-    }
-  });
-
-  const handleNovaTarefa = (textoNovaTarefa: string) => {
-    setTarefas(tarefas.concat({
+    const novaTarefa: ITarefa = {
       id: Date.now(),
-      tarefa: textoNovaTarefa,
-      completa: false
-    }));
+      tarefa: texto,
+      completa: false,
+    };
 
-    textoNovaTarefa = '';
-  }
+    setTarefas([...tarefas, novaTarefa]);
+    setTextoNovaTarefa("");
+  };
 
   const handleTarefaCompleta = (tarefaAtualizar: ITarefa) => {
-    const tarefasAtualizadas = tarefas.map(tarefa => (
+    const tarefasAtualizadas = tarefas.map((tarefa) =>
       tarefa.id === tarefaAtualizar.id
         ? { ...tarefa, completa: !tarefa.completa }
         : tarefa
-    ))
+    );
 
     setTarefas(tarefasAtualizadas);
-
-    const quantidadeTarefasIncompletas = tarefas.filter(tarefa => !tarefa.completa).length;
-    document.title = `${quantidadeTarefasIncompletas} tarefas incompletas!`
-  }
+  };
 
   const handleApagarTarefa = (tarefaApagar: ITarefa) => {
-    const tarefasAtualizadas = tarefas.filter(tarefa => tarefa.id !== tarefaApagar.id)
+    const tarefasAtualizadas = tarefas.filter(
+      (tarefa) => tarefa.id !== tarefaApagar.id
+    );
     setTarefas(tarefasAtualizadas);
-  }
+  };
+
+  const tarefasIncompletas = tarefas.filter((tarefa) => !tarefa.completa);
+  const tarefasCompletas = tarefas.filter((tarefa) => tarefa.completa);
+  const isBotaoAdicionarDesabilitado = textoNovaTarefa.trim() === "";
 
   return (
     <div className="conteudo">
       <p>
-            <label htmlFor="nova-tarefa">Adicionar Tarefa</label>
-            <input
-                id="nova-tarefa"
-                type="text"
-                value={textoNovaTarefa}
-                onChange={e => textoNovaTarefa = e.target.value}
-            />
-            <button
-                id="botao-adicionar"
-                onClick={() => handleNovaTarefa(textoNovaTarefa)}
-            >Adicionar</button>
-        </p>
-        <ListaTarefas
-          titulo="Tarefas"
-          divId="incompletas"
-          tarefas={tarefasIncompletas}
-          handleTarefaCompleta={handleTarefaCompleta}
-          handleApagarTarefa={handleApagarTarefa}
-          linkTitulo="incompletas"
+        <label htmlFor="nova-tarefa">Adicionar Tarefa</label>
+        <input
+          id="nova-tarefa"
+          type="text"
+          value={textoNovaTarefa}
+          onChange={(e) => setTextoNovaTarefa(e.target.value)}
         />
-        <ListaTarefas
-          titulo="Completas"
-          divId="completas"
-          tarefas={tarefasCompletas}
-          handleTarefaCompleta={handleTarefaCompleta}
-          handleApagarTarefa={handleApagarTarefa}
-          linkTitulo="completas"
-        />
+        <button
+          id="botao-adicionar"
+          onClick={() => handleNovaTarefa(textoNovaTarefa)}
+          disabled={isBotaoAdicionarDesabilitado}
+        >
+          Adicionar
+        </button>
+      </p>
+      <ListaTarefas
+        titulo="Tarefas"
+        divId="incompletas"
+        tarefas={tarefasIncompletas}
+        handleTarefaCompleta={handleTarefaCompleta}
+        handleApagarTarefa={handleApagarTarefa}
+        linkTitulo="incompletas"
+      />
+      <ListaTarefas
+        titulo="Completas"
+        divId="completas"
+        tarefas={tarefasCompletas}
+        handleTarefaCompleta={handleTarefaCompleta}
+        handleApagarTarefa={handleApagarTarefa}
+        linkTitulo="completas"
+      />
     </div>
   )
 }

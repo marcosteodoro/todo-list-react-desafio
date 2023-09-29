@@ -25,10 +25,16 @@ export default function ListaTarefas(props: ListaTarefasProps) {
             <ul id={props.divId}>
                 {props.tarefas.map(tarefa => (
                     <li key={tarefa.id}>
-                    <input type="checkbox" checked={tarefa.completa} onChange={() => handleTarefaCompleta(tarefa)}/>
-                    <label>{tarefa.tarefa}</label>
-                    <button className="apagar" onClick={() => handleApagarTarefa(tarefa)}>Apagar</button>
-                </li>
+                        <input type="checkbox" checked={tarefa.completa} onChange={() => handleTarefaCompleta(tarefa)} />
+                        {tarefa.completa ? (
+                            <label>
+                                <del>{tarefa.tarefa}</del>
+                            </label>
+                        ) : (
+                            <label>{tarefa.tarefa}</label>
+                        )}
+                        <button className="apagar" onClick={() => handleApagarTarefa(tarefa)}>Apagar</button>
+                    </li>
                 ))}
             </ul>
         </>
