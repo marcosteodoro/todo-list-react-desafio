@@ -1,6 +1,9 @@
 .conteudo {
     margin: 100px auto 0;
-    width: 400px;
+    width: 500px;
+    padding: 30px 60px;
+    border-radius: 20px;
+    background-color: #e9edf4;
 }
 
 ul {
@@ -28,7 +31,7 @@ button {
     width: 94px;
 }
 
-h4,
+h4, h1, 
 label[for='nova-tarefa'] {
     color: #333;
     font-weight: 700;
@@ -62,7 +65,7 @@ label[for='nova-tarefa'] {
 
 input#nova-tarefa {
     float: left;
-    width: 290px;
+    width: 270px;
     margin-right: 15px;
     height: 38px;
 }
@@ -71,8 +74,7 @@ li {
     overflow: hidden;
     padding: 20px 0;
     border-bottom: 1px solid #eee;
-    width: 400px;
-    margin-right: 15px !important;
+    width: 390px;
 }
 
 li>input[type="checkbox"] {
@@ -84,7 +86,7 @@ li>input[type="checkbox"] {
 li>label {
     font-size: 18px;
     line-height: 40px;
-    width: 270px;
+    width: 250px;
     padding: 0 0 0 11px;
 }
 
@@ -96,3 +98,7 @@ li>input[type="text"] {
     text-decoration: line-through;
     color: #888;
 }
+
+/* .apagar {
+    margin-right: 50px;
+} */

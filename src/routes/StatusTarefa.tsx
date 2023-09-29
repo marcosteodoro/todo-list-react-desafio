@@ -15,7 +15,7 @@ export default function StatusTarefa(props: StatusTarefaProps) {
     const tarefasStatus = tarefas.filter(tarefa => props.completa ? tarefa.completa : !tarefa.completa);
 
     return (
-        <div>
+        <div className="conteudo">
             <h1>{props.titulo}</h1>
             <ul>
                 {tarefasStatus.map(tarefa => <li key={tarefa.id}>{tarefa.tarefa}</li>)}
