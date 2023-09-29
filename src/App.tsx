@@ -3,7 +3,7 @@ import ITarefa from "./interfaces/ITarefa"
 import ListaTarefas from "./components/ListaTarefas"
 
 function App() {
-  let textoNovaTarefa = '';
+  const [textoNovaTarefa, setTextoNovaTarefa] = useState("");
   const [tarefas, setTarefas] = useState<ITarefa[]>(() => {
     const tarefasSalvas = localStorage.getItem("tarefas");
     return tarefasSalvas?.length ? JSON.parse(tarefasSalvas) : []
@@ -11,22 +11,13 @@ function App() {
 
   useEffect(() => {
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
+
+    const quantidadeTarefasIncompletas = tarefas.filter(tarefa => !tarefa.completa).length;
+    document.title = `${quantidadeTarefasIncompletas} tarefas incompletas!`
   }, [tarefas])
 
-  let tarefasIncompletas: ITarefa[] = [];
-  let tarefasCompletas: ITarefa[] = [];
-
-  tarefas.forEach(tarefa => {
-    if (!tarefa.completa) {
-      tarefasIncompletas.push(tarefa);
-    }
-  });
-
-  tarefas.forEach(tarefa => {
-    if (tarefa.completa) {
-      tarefasCompletas.push(tarefa);
-    }
-  });
+  const tarefasIncompletas: ITarefa[] = tarefas.filter(tarefa => !tarefa.completa);
+  const tarefasCompletas: ITarefa[] = tarefas.filter(tarefa => tarefa.completa);
 
   const handleNovaTarefa = (textoNovaTarefa: string) => {
     setTarefas(tarefas.concat({
@@ -35,7 +26,7 @@ function App() {
       completa: false
     }));
 
-    textoNovaTarefa = '';
+    setTextoNovaTarefa('');
   }
 
   const handleTarefaCompleta = (tarefaAtualizar: ITarefa) => {
@@ -46,15 +37,21 @@ function App() {
     ))
 
     setTarefas(tarefasAtualizadas);
-
-    const quantidadeTarefasIncompletas = tarefas.filter(tarefa => !tarefa.completa).length;
-    document.title = `${quantidadeTarefasIncompletas} tarefas incompletas!`
   }
 
   const handleApagarTarefa = (tarefaApagar: ITarefa) => {
     const tarefasAtualizadas = tarefas.filter(tarefa => tarefa.id !== tarefaApagar.id)
     setTarefas(tarefasAtualizadas);
   }
+  const handleAdicionarClick = () => {
+    const confirmation = window.confirm('Are you sure you want to add this item?');
+
+    if (confirmation) {
+      handleNovaTarefa(textoNovaTarefa);
+      setTextoNovaTarefa("");
+    }
+  }
+  const isButtonEnabled = textoNovaTarefa.trim() !== "";
 
   return (
     <div className="conteudo">
@@ -64,11 +61,12 @@ function App() {
                 id="nova-tarefa"
                 type="text"
                 value={textoNovaTarefa}
-                onChange={e => textoNovaTarefa = e.target.value}
+                onChange={e => setTextoNovaTarefa(e.target.value)}
             />
             <button
                 id="botao-adicionar"
-                onClick={() => handleNovaTarefa(textoNovaTarefa)}
+                onClick={handleAdicionarClick}
+                disabled={!isButtonEnabled}
             >Adicionar</button>
         </p>
         <ListaTarefas

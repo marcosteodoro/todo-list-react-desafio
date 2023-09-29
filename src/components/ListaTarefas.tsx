@@ -26,7 +26,7 @@ export default function ListaTarefas(props: ListaTarefasProps) {
                 {props.tarefas.map(tarefa => (
                     <li key={tarefa.id}>
                     <input type="checkbox" checked={tarefa.completa} onChange={() => handleTarefaCompleta(tarefa)}/>
-                    <label>{tarefa.tarefa}</label>
+                    <label>{tarefa.completa ? <del>{tarefa.tarefa}</del> : tarefa.tarefa}</label>
                     <button className="apagar" onClick={() => handleApagarTarefa(tarefa)}>Apagar</button>
                 </li>
                 ))}
