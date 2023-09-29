@@ -13,7 +13,7 @@ const router = createBrowserRouter([
   },
   {
     path: "completas",
-    element: <Incompletas />
+    element: <Completas />
   },
   {
     path: "incompletas",
