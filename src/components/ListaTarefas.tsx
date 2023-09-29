@@ -21,14 +21,14 @@ export default function ListaTarefas(props: ListaTarefasProps) {
 
     return (
         <>
-            {props.divId === "completas"
-            ? <del><h3><Link to={props.linkTitulo}>{props.titulo}</Link></h3></del>
-            : <h3><Link to={props.linkTitulo}>{props.titulo}</Link></h3>}
+            <h3><Link to={props.linkTitulo}>{props.titulo}</Link></h3>
             <ul id={props.divId}>
                 {props.tarefas.map(tarefa => (
                     <li key={tarefa.id}>
                     <input type="checkbox" checked={tarefa.completa} onChange={() => handleTarefaCompleta(tarefa)}/>
-                    <label>{tarefa.tarefa}</label>
+                    {props.divId === "completas"
+                    ?<label><del>{tarefa.tarefa}</del></label>
+                    :<label>{tarefa.tarefa}</label>}
                     <button className="apagar" onClick={() => handleApagarTarefa(tarefa)}>Apagar</button>
                 </li>
                 ))}
