@@ -3,8 +3,7 @@ import ReactDOM from 'react-dom/client'
 import './styles.css'
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Inicial from './routes/Inicial.tsx';
-import Completas from './routes/Completas.tsx';
-import Incompletas from './routes/Incompletas.tsx';
+import ListaFocada from './routes/ListaFocada.tsx';
 
 const router = createBrowserRouter([
   {
@@ -13,11 +12,11 @@ const router = createBrowserRouter([
   },
   {
     path: "completas",
-    element: <Completas />
+    element: <ListaFocada titulo='Completas' completa={true} />
   },
   {
     path: "incompletas",
-    element: <Incompletas />
+    element: <ListaFocada titulo='Incompletas' completa={false} />
   }
 ])
 
