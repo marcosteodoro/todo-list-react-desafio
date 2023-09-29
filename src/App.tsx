@@ -25,7 +25,7 @@ export function App() {
   }, [tarefasIncompletas.length]);
 
   const handleNovaTarefa = (textoNovaTarefa: string) => {
-    if (textoNovaTarefa.length === 0) {
+    if (textoNovaTarefa.trim().length === 0) {
       alert("Campo vazio");
       return;
     }
@@ -34,7 +34,7 @@ export function App() {
       ...oldTarefas,
       {
         id: Date.now(),
-        tarefa: textoNovaTarefa,
+        tarefa: textoNovaTarefa.trim(),
         completa: false,
       },
     ]);
@@ -73,7 +73,7 @@ export function App() {
         <button
           id="botao-adicionar"
           onClick={() => handleNovaTarefa(textoNovaTarefa)}
-          disabled={textoNovaTarefa.length === 0}
+          disabled={textoNovaTarefa.trim().length === 0}
         >
           Adicionar
         </button>
