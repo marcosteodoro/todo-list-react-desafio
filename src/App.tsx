@@ -43,7 +43,13 @@ function App() {
     const tarefasAtualizadas = tarefas.filter(tarefa => tarefa.id !== tarefaApagar.id)
     setTarefas(tarefasAtualizadas);
   }
+  const handleAdicionarClick = () => {
+    const confirmation = window.confirm('Are you sure you want to add this item?');
 
+    if (confirmation) {
+      handleNovaTarefa(textoNovaTarefa);
+    }
+  }
   return (
     <div className="conteudo">
       <p>
@@ -56,7 +62,7 @@ function App() {
             />
             <button
                 id="botao-adicionar"
-                onClick={() => handleNovaTarefa(textoNovaTarefa)}
+                onClick={handleAdicionarClick}
             >Adicionar</button>
         </p>
         <ListaTarefas
