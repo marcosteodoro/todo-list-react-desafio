@@ -14,17 +14,20 @@ function App() {
   }, [tarefas]);
 
   const handleNovaTarefa = (textoNovaTarefa: string) => {
-    if (textoNovaTarefa.trim() !== "") {
-      setTarefas([
-        ...tarefas,
-        {
-          id: Date.now(),
-          tarefa: textoNovaTarefa,
-          completa: false,
-        },
-      ]);
-      setTextoNovaTarefa(""); // Limpa o campo de entrada
+    if (textoNovaTarefa.trim() === "") {
+      alert("Por favor, insira alguma descrição para a tarefa.");
+      return; // Impede a adição de tarefas em branco
     }
+
+    setTarefas([
+      ...tarefas,
+      {
+        id: Date.now(),
+        tarefa: textoNovaTarefa,
+        completa: false,
+      },
+    ]);
+    setTextoNovaTarefa(""); // Limpa o campo de entrada
   };
 
   const handleTarefaCompleta = (tarefaAtualizar: ITarefa) => {
@@ -63,7 +66,7 @@ function App() {
           id="botao-adicionar"
           onClick={() => handleNovaTarefa(textoNovaTarefa)}
         >
-          Adicionar
+          Adicion
         </button>
       </p>
       <ListaTarefas
