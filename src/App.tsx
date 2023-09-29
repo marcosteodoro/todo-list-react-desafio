@@ -52,6 +52,8 @@ function App() {
     setTarefas(tarefasAtualizadas);
   };
 
+  const isTextoInvalido = textoNovaTarefa.trim() === "";
+
   return (
     <div className="conteudo">
       <p>
@@ -65,8 +67,9 @@ function App() {
         <button
           id="botao-adicionar"
           onClick={() => handleNovaTarefa(textoNovaTarefa)}
+          disabled={isTextoInvalido}
         >
-          Adicion
+          Adicionar
         </button>
       </p>
       <ListaTarefas
