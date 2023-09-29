@@ -48,6 +48,7 @@ function App() {
 
     if (confirmation) {
       handleNovaTarefa(textoNovaTarefa);
+      setTextoNovaTarefa("");
     }
   }
   const isButtonEnabled = textoNovaTarefa.trim() !== "";
