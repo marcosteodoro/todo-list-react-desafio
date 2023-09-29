@@ -27,6 +27,7 @@ function App() {
         completa: false,
       },
     ]);
+    
     setTextoNovaTarefa(""); // Limpa o campo de entrada
   };
 
@@ -66,7 +67,9 @@ function App() {
         />
         <button
           id="botao-adicionar"
-          onClick={() => handleNovaTarefa(textoNovaTarefa)}
+          onClick={() => {
+            handleNovaTarefa(textoNovaTarefa);
+          }}
           disabled={isTextoInvalido}
         >
           Adicionar
