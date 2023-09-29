@@ -26,7 +26,7 @@ function App() {
       completa: false
     }));
 
-    textoNovaTarefa = '';
+    setTextoNovaTarefa('');
   }
 
   const handleTarefaCompleta = (tarefaAtualizar: ITarefa) => {
@@ -50,6 +50,8 @@ function App() {
       handleNovaTarefa(textoNovaTarefa);
     }
   }
+  const isButtonEnabled = textoNovaTarefa.trim() !== "";
+
   return (
     <div className="conteudo">
       <p>
@@ -63,6 +65,7 @@ function App() {
             <button
                 id="botao-adicionar"
                 onClick={handleAdicionarClick}
+                disabled={!isButtonEnabled}
             >Adicionar</button>
         </p>
         <ListaTarefas
