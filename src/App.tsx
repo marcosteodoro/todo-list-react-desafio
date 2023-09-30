@@ -9,6 +9,14 @@ function App() {
     return tarefasSalvas ? JSON.parse(tarefasSalvas) : [];
   });
 
+  // Use useEffect para atualizar o título da página
+  useEffect(() => {
+    const quantidadeTarefasIncompletas = tarefas.filter(
+      (tarefa) => !tarefa.completa
+    ).length;
+    document.title = `${quantidadeTarefasIncompletas} tarefas incompletas!`;
+  }, [tarefas]);
+
   useEffect(() => {
     localStorage.setItem("tarefas", JSON.stringify(tarefas));
   }, [tarefas]);
@@ -39,11 +47,6 @@ function App() {
     );
 
     setTarefas(tarefasAtualizadas);
-
-    const quantidadeTarefasIncompletas = tarefasAtualizadas.filter(
-      (tarefa) => !tarefa.completa
-    ).length;
-    document.title = `${quantidadeTarefasIncompletas} tarefas incompletas!`;
   };
 
   const handleApagarTarefa = (tarefaApagar: ITarefa) => {
